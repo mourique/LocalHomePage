@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Local</title>
+        <title>FFMEMEX - Local Websites</title>
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="<?= $projroot ?>css/main.css">
     </head>
@@ -17,7 +17,7 @@
 
 		    <header>
 
-			    <h1>My Local Sites</h1>
+			    <h1>Local Websites</h1>
 
 			    <nav>
 			        <ul>
@@ -77,6 +77,10 @@
 					// We'll start by checking if the site looks like it's a WordPress site
 					if ( is_dir( $file . '/wp-admin' ) )
 						$adminurl = sprintf( 'http://%1$s/wp-admin', $siteroot );
+
+					if ( is_dir( $file . '/kirby' ) )
+						$adminurl = sprintf( 'http://%1$s/panel', $siteroot );
+
 
 					// If the user has defined an adminurl for the project we'll use that instead
 		            if (isset($siteoptions[$project]) &&  is_array( $siteoptions[$project] ) && array_key_exists( 'adminurl', $siteoptions[$project] ) )
