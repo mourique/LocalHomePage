@@ -14,7 +14,9 @@
     <body>
 
 	    <div class="canvas">
-
+	<span class="current-time">
+		    		<?php echo date(DATE_RSS)."\n"; ?>
+		    	</span>
 		    <header>
 
 			    <h1>Local Websites</h1>
@@ -32,6 +34,7 @@
 		    </header>
 
 		    <content class="cf">
+		    
 <?php
 		    foreach ( $dir as $d ) {
 			    $dirsplit = explode('/', $d);
@@ -99,6 +102,101 @@
 
 		   	} // foreach ( $dir as $d )
 ?>
+<hr />
+<h2>Remote Websites</h2>
+<?
+
+$sitelist = array(
+    "https://www.das-plats.de",
+    "https://www.gruenekuriere.de",
+    "https://www.kinderaerztesachsenhausen.de",
+    "https://www.mari-babic.de",
+    "https://www.felixf.de",
+    "thisisafailcheck.com"
+);
+
+$filename = "/Users/ff/Documents/plaintext/hosted-websites.txt";
+
+// Open the file
+$fp = @fopen($filename, 'r'); 
+
+// Add each line to an array
+if ($fp) {
+    $sitelist = explode("\n", fread($fp, filesize($filename)));
+}
+
+$errormsg = "There is an error with the following sites: \n\n";
+$error = False;
+echo '<ul class="sites Websites">';
+foreach ($sitelist as $i => $site) {
+echo '<li>';
+        $crl = curl_init();
+        $timeout = 10;
+        curl_setopt ($crl, CURLOPT_URL, $site);
+        curl_setopt ($crl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt ($crl, CURLOPT_CONNECTTIMEOUT, $timeout);
+        $content = curl_exec($crl);
+        echo $site;
+        if( curl_errno($crl) )
+        {
+                $error = True;
+                echo " (curl error: ".curl_error($crl).")\n";
+        } else {
+        	echo '<span class="checked">✓</span>';
+        }
+
+        $status = curl_getinfo($crl, CURLINFO_HTTP_CODE);
+        $status_range =  (string)$status;
+        $status_range = $status_range[0]; // status starts as an integer and has to be converted to string to get the first digit
+
+        if( !( $status_range == '2' || $status_range == '3' ) ) // 200's are a good response and 300's are redirects
+        {
+                $error = True;
+                echo " [Code ".$status."]\n";
+        } else {
+        	echo '<span class="checked">✓</span>';
+        }
+
+        $length = strlen( $content );
+        if( $length < 2 )
+        {
+                $error = True;
+                echo "[No Content]\n";
+        } else {
+        	echo '<span class="checked">✓</span>';
+        }
+
+        curl_close($crl);
+        echo '</li>';
+
+}
+echo '</ul>';
+// echo '<ul>';
+
+// if( $error ) {
+// 		echo '<li>';
+//         echo $errormsg;
+// 		echo '</li>';
+
+//         $to      = 'address1@email.com,address2@email.com';
+//         $subject = '## Websites are down ##';
+//         $message = $errormsg;
+//         $headers = 'From: noreply@mywebsite.com' . "\r\n" .
+//         'X-Mailer: PHP/' . phpversion();
+
+//         mail($to, $subject, $message, $headers);
+// } else {
+// 	echo '<li>';
+//     echo "No errors encountered.\n";
+//     echo '</li>';
+// }
+
+// echo '</ul>';
+
+
+?>
+
+
 			</content>
 
 
