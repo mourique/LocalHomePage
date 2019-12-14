@@ -106,23 +106,24 @@
 <h2>Remote Websites</h2>
 <?
 
+
 $sitelist = array(
-    "https://www.das-plats.de",
-    "https://www.gruenekuriere.de",
-    "https://www.kinderaerztesachsenhausen.de",
-    "https://www.mari-babic.de",
     "https://www.felixf.de",
-    "thisisafailcheck.com"
 );
 
-$filename = "/Users/ff/Documents/plaintext/hosted-websites.txt";
+// $filename = "/Users/ff/Documents/plaintext/hosted-websites.txt";
 
-// Open the file
-$fp = @fopen($filename, 'r'); 
+// // Open the file
+// $fp = @fopen($filename, 'r'); 
 
-// Add each line to an array
-if ($fp) {
-    $sitelist = explode("\n", fread($fp, filesize($filename)));
+// // Add each line to an array
+// if ($fp) {
+//     $sitelist = explode("\n", fread($fp, filesize($filename)));
+// }
+
+foreach ( $remotewebsites as $website ) {
+	// printf( '<li><a href="%1$s">%2$s</a></li>', $tool['url'], $tool['name'] );
+    $sitelist[] = $website['url'];
 }
 
 $errormsg = "There is an error with the following sites: \n\n";
